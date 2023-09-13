@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-dotenv.config();
 import { MongoClient, ServerApiVersion } from "mongodb";
+dotenv.config();
 
 //Creamos la conexión y seteamos las opciones de API estable
 const client = new MongoClient(process.env.MONGO_URI,{
