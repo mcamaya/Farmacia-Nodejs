@@ -60,7 +60,17 @@ export const totalVentas = async (req, res) => {
 
 export const compraronParacetamol = async (req, res) => {
     try {
-        const data = await ventas.find({"medicamentosVendidos.nombreMedicamento": "Paracetamol"}).toArray();
+        const date2022 = new Date("December 31, 2022");
+        const date2024 = new Date("January 01, 2024");
+
+        const data = await ventas.aggregate([
+            {$match: {
+                fechaVenta: {$gt: date2022}, // Me busque elementos que coincidan con la fecha
+                fechaVenta: {$lt: date2024},
+                "medicamentosVendidos.nombreMedicamento": "Paracetamol"
+            }}
+        ]).toArray();
+
         const pacientes = data.map(e => e.paciente)
         res.status(200).json(pacientes);
     } catch (err) {
@@ -144,59 +154,35 @@ export const promedioVentas = async (req, res) => {
     }
 }
 
-
-export const salesEmployees = async (req, res) => {
+export const pacienteMasDinero = async (req, res) => {
     try {
-        const empleados = await ventas.distinct("empleado.nombre");
-        const data = await Promise.all(empleados.map(async emp => {
-            let i = await ventas.aggregate([
-                {$match: 
-                    {"empleado.nombre": emp} // Consultas dinámicas. Por cada empleado va a hacer esta consulta
-                }
-            ]).toArray();
+        const dateInicio = new Date("2023-01-01");
+        const dateFinal = new Date("2024-01-01");
 
-            let obj = {
-                "empleado": emp,
-                "cantidadVentas": i.length,
-                "ventas": i
-            }
-
-            return obj
-        }))
-
-        console.log(empleados);
-        res.status(200).json(data);
-    } catch (err) {
-        res.status(500).json({error: err.message});
-        console.log(err);
-    }
-}
-
-export const MoreThan5Sales = async (req, res) => {
-    try {
         const data = await ventas.aggregate([
             {
-              $group: {
-                _id: "$empleado.nombre",
-                totalVentas: { $sum: 1 } //suma 1 por cada venta para contar el total
-              }
+                $match: {
+                    fechaVenta: {
+                        $gte: dateInicio,
+                        $lt: dateFinal
+                    }
+                }
+            },
+            {$unwind: "$medicamentosVendidos"},
+            {
+                $group: {
+                    _id: "$paciente.nombre",
+                    totalGasto: {$sum: {$multiply: ["$medicamentosVendidos.cantidadVendida", "$medicamentosVendidos.precio"]}}
+                }
             },
             {
-              $match: {
-                totalVentas: { $gt: 5 } //filtra empleados con más de 5 ventas
-              }
-            },
-            {
-              $project: {
-                _id: 0,
-                totalVentas: 1,
-                empleado: "$_id"
-              }
+                $sort: {totalGasto:-1}
             }
-          ]).toArray();
+        ]).limit(1).toArray();
         res.status(200).json(data);
     } catch (err) {
         res.status(500).json({error: err.message});
         console.log(err);
     }
 }
+

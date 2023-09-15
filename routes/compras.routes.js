@@ -1,13 +1,8 @@
 import { Router } from "express";
-import db from "../config.js";
 const router = Router();
+import * as controller from "../controllers/compras.controllers.js";
 
-const medicamentos = db.collection('compras');
-
-
-router.get('/', async (req, res) => {
-    const data = await medicamentos.find().toArray();
-    res.status(200).json(data);
-})
+router.get('/', controller.getAll);
+router.get('/super_provider', controller.proveedorMasMedicamentos);
 
 export default router;

@@ -93,7 +93,7 @@
 ```
 #### 18. Cantidad de ventas realizadas por cada empleado en 2023.```
 ```bash
-  GET /api/v1/ventas/employees_sales
+  GET /api/v1/empleados/employees_sales
 ```
 
 #### 19. Obtener todos los medicamentos que expiren en 2024.```
@@ -113,5 +113,25 @@
 
 #### 22. Paciente que ha gastado más dinero en 2023.
 ```bash
-  GET /api/v1/ventas
+  GET /api/v1/ventas/spent_most
 ``` 
+
+#### 23. Empleados que no han realizado ninguna venta en 2023.
+```bash
+  GET /api/v1/empleados/is_not_selling
+``` 
+
+#### 24. Proveedor que ha suministrado más medicamentos en 2023.
+```bash
+  GET /api/v1/compras/super_provider
+``` 
+
+#### 25. Pacientes que compraron el medicamento “Paracetamol” en 2023.
+```bash
+  GET /api/v1/ventas/bought_paracetamol
+```
+
+#### 26. Total de medicamentos vendidos por mes en 2023.
+```bash
+  GET /api/v1/ventas/bought_paracetamol
+```
