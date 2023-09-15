@@ -64,6 +64,48 @@ export const compraronParacetamol = async (req, res) => {
         const pacientes = data.map(e => e.paciente)
         res.status(200).json(pacientes);
     } catch (err) {
-        
+        res.status(500).json({error: err.message});
+        console.log(err);
+    }
+}
+
+export const sales2023 = async (req, res) => {
+    try {
+        const date = new Date("December 31, 2022");
+        const result = await ventas.find({fechaVenta: {$gt: date}}).toArray();
+        const count = await ventas.countDocuments({fechaVenta: {$gt: date}})
+        res.status(200).json({count, result});
+    } catch (err) {
+        res.status(500).json({error: err.message});
+        console.log(err);
+    }
+}
+
+export const lessSold2023 = async (req, res) => {
+    try {
+        const date2022 = new Date("December 31, 2022");
+        const date2024 = new Date("January 01, 2024");
+
+        const data = await ventas.aggregate([
+            {$match: {
+                fechaVenta: {$gt: date2022}, // Me busque elementos que coincidan con la fecha
+                fechaVenta: {$lt: date2024}
+            }},
+            {$unwind: "$medicamentosVendidos"}, // desestructure el array
+            {$group: 
+                {_id: "$medicamentosVendidos.nombreMedicamento", // agrupa los que coincidan con el mismo nombre y suma las veces que ha sido vendido
+                totalVendido: { $sum: "$medicamentosVendidos.cantidadVendida"},
+            }},
+            {$sort: {
+                totalVendido: 1, // Hacemos que el resultado menor se posicione como el primero
+                _id: 1
+            }},
+            //{$limit: 1} // Podemos usar limit para hallar el elemento menos vendido cuando los valores no se repiten
+        ]).toArray();
+
+        res.status(200).json({msg: `Los primeros elementos son los que tienen menos ventas. Hay ${data.length} resultados`, data});
+    } catch (err) {
+        res.status(500).json({error: err.message});
+        console.log(err);
     }
 }

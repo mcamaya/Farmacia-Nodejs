@@ -77,7 +77,17 @@
   GET /api/v1/ventas/bought_paracetamol
 ```
 
-#### 13. Proveedores que no han vendido medicamentos en el último año.
+#### 14. Obtener el total de medicamentos vendidos en marzo de 2023
 ```bash
-  GET /api/v1/ventas/bought_paracetamol
+  GET /api/v1/ventas/sales_2023
+```
+
+#### 15. Obtener el medicamento menos vendido en 2023
+```bash
+  GET /api/v1/ventas/less_sold_2023
+```
+
+#### 16. Ganancia total por proveedor en 2023 (asumiendo un campo precioCompra en Compras).
+```bash
+  GET /api/v1/ventas/less_sold_2023
 ```

@@ -7,5 +7,7 @@ router.get('/prescription_2023', controller.prescription2023);
 router.get('/medicines_in_sales/:medicine', controller.findMedicineInSales);
 router.get('/total_sales', controller.totalVentas);
 router.get('/bought_paracetamol', controller.compraronParacetamol);
+router.get('/sales_2023', controller.sales2023);
+router.get('/less_sold_2023', controller.lessSold2023);
 
 export default router;
