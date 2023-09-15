@@ -1,5 +1,6 @@
 import db from "../config.js";
 const medicamentos = db.collection('medicamentos');
+const ventas = db.collection('ventas')
 
 export const getAll = async (req, res) => {
     try {
@@ -61,6 +62,27 @@ export const allProviders = async (req, res) => {
                 count: provC
             }
         });
+    } catch (err) {
+        res.status(500).json({error: err.message});
+        console.log(err);
+    }
+}
+
+export const notSold = async (req, res) => {
+    try {
+        const medicamentosVendidos = await ventas.distinct("medicamentosVendidos.nombreMedicamento");
+        const data = await medicamentos.find({"nombre": {$nin: medicamentosVendidos}}).toArray();
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+        console.log(err);
+    }
+}
+
+export const mostExpensiveOne = async (req, res) => {
+    try {
+        const data = await medicamentos.find().sort({precio:-1}).limit(1).toArray();
+        res.status(200).json(data);
     } catch (err) {
         res.status(500).json({error: err.message});
         console.log(err);

@@ -51,3 +51,33 @@
 ```bash
   GET /api/v1/medicamentos/all_providers
 ```
+
+#### 8. Cantidad total de dinero recaudado por las ventas de medicamentos
+```bash
+  GET /api/v1/ventas/total_sales
+```
+
+#### 9. Medicamentos que no han sido vendidos.
+```bash
+  GET /api/v1/medicamentos/not_sold
+```
+
+#### 10. Obtener el medicamento más caro.
+```bash
+  GET /api/v1/medicamentos/most_expensive
+```
+
+#### 11. Número de medicamentos por proveedor.
+```bash
+  GET /api/v1/medicamentos/all_providers
+```
+
+#### 12. Pacientes que han comprado Paracetamol.
+```bash
+  GET /api/v1/ventas/bought_paracetamol
+```
+
+#### 13. Proveedores que no han vendido medicamentos en el último año.
+```bash
+  GET /api/v1/ventas/bought_paracetamol
+```
