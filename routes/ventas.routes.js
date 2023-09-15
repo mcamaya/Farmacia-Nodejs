@@ -11,5 +11,6 @@ router.get('/sales_2023', controller.sales2023);
 router.get('/less_sold_2023', controller.lessSold2023);
 router.get('/average_sales', controller.promedioVentas);
 router.get('/spent_most', controller.pacienteMasDinero);
+router.get('/sales_per_month', controller.salesPerMonth);
 
 export default router;

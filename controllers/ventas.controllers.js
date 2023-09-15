@@ -186,3 +186,156 @@ export const pacienteMasDinero = async (req, res) => {
     }
 }
 
+export const salesPerMonth = async (req, res) => {
+    try {
+        const [Enero ,Febrero , Marzo, Abril , Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre] = await Promise.all([
+            //enero
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-01-01"), 
+                            $lt: new Date("2023-02-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //febrero
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-02-01"), 
+                            $lt: new Date("2023-03-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //marzo
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-03-01"), 
+                            $lt: new Date("2023-04-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //abril
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-04-01"), 
+                            $lt: new Date("2023-05-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //mayo
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-05-01"), 
+                            $lt: new Date("2023-06-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //junio
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-06-01"), 
+                            $lt: new Date("2023-07-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //julio
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-07-01"), 
+                            $lt: new Date("2023-08-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //agosto
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-08-01"), 
+                            $lt: new Date("2023-09-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //septiembre
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-9-01"), 
+                            $lt: new Date("2023-10-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //octubre
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-10-01"), 
+                            $lt: new Date("2023-11-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //noviembre
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-11-01"), 
+                            $lt: new Date("2023-12-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+
+            //diciembre
+            ventas.aggregate([
+                {
+                    $match: {
+                        fechaVenta: {
+                            $gte: new Date("2023-12-01"), 
+                            $lt: new Date("2024-01-01")
+                        }
+                    }
+                }
+            ]).toArray(),
+        ]);
+        res.json({Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre});
+    } catch (err) {
+        res.status(500).json({error: err.message});
+        console.log(err);
+    }
+}

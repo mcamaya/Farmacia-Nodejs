@@ -133,5 +133,5 @@
 
 #### 26. Total de medicamentos vendidos por mes en 2023.
 ```bash
-  GET /api/v1/ventas/bought_paracetamol
+  GET /api/v1/ventas/sales_per_month
 ```
