@@ -72,8 +72,12 @@ export const compraronParacetamol = async (req, res) => {
 export const sales2023 = async (req, res) => {
     try {
         const date = new Date("December 31, 2022");
-        const result = await ventas.find({fechaVenta: {$gt: date}}).toArray();
-        const count = await ventas.countDocuments({fechaVenta: {$gt: date}})
+
+        const [ result, count ] = await Promise.all([
+            ventas.find({fechaVenta: {$gt: date}}).toArray(),
+            ventas.countDocuments({fechaVenta: {$gt: date}})
+        ]);
+        
         res.status(200).json({count, result});
     } catch (err) {
         res.status(500).json({error: err.message});
@@ -112,21 +116,24 @@ export const lessSold2023 = async (req, res) => {
 
 export const promedioVentas = async (req, res) => {
     try {
-        const allQuantities = await ventas.aggregate([
-            { $unwind: "$medicamentosVendidos" },
-            {$project: 
-                {_id: "$medicamentosVendidos.nombreMedicamento",
-                avgQuantity : {  $avg : "$medicamentosVendidos.cantidadVendida" }}
-            }
-        ]).toArray();
-        const promediosIndividual = await ventas.aggregate([
-            { $unwind: "$medicamentosVendidos" },
-            {$group: 
-                {_id: "$medicamentosVendidos.nombreMedicamento",
-                avgQuantity : {  $avg : "$medicamentosVendidos.cantidadVendida" }}
-            },
-            {$sort: {avgQuantity: -1}}
-        ]).toArray();
+
+        const [ allQuantities , promediosIndividual ] = await Promise.all([
+            ventas.aggregate([
+                { $unwind: "$medicamentosVendidos" },
+                {$project: 
+                    {_id: "$medicamentosVendidos.nombreMedicamento",
+                    avgQuantity : {  $avg : "$medicamentosVendidos.cantidadVendida" }}
+                }
+            ]).toArray(),
+            ventas.aggregate([
+                { $unwind: "$medicamentosVendidos" },
+                {$group: 
+                    {_id: "$medicamentosVendidos.nombreMedicamento",
+                    avgQuantity : {  $avg : "$medicamentosVendidos.cantidadVendida" }}
+                },
+                {$sort: {avgQuantity: -1}}
+            ]).toArray()
+        ]);
         let contador = 0;
         allQuantities.forEach((e) => contador += e.avgQuantity);
         const promedioTotal = (contador / allQuantities.length);
@@ -141,7 +148,7 @@ export const promedioVentas = async (req, res) => {
 export const salesEmployees = async (req, res) => {
     try {
         const empleados = await ventas.distinct("empleado.nombre");
-        const data = await Promise.all (empleados.map(async emp => {
+        const data = await Promise.all(empleados.map(async emp => {
             let i = await ventas.aggregate([
                 {$match: 
                     {"empleado.nombre": emp} // Consultas dinámicas. Por cada empleado va a hacer esta consulta

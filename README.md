@@ -108,5 +108,10 @@
 
 #### 21. Medicamentos que no han sido vendidos nunca.
 ```bash
-  GET /api/v1/medicamentos/more_than_5_sales
+  GET /api/v1/medicamentos/not_sold
+```
+
+#### 22. Paciente que ha gastado más dinero en 2023.
+```bash
+  GET /api/v1/ventas
 ``` 

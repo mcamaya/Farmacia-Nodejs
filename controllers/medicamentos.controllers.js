@@ -47,10 +47,12 @@ export const expiresBefore2024 = async (req, res) => {
 
 export const allProviders = async (req, res) => {
     try {
-        const provA = await medicamentos.countDocuments({"proveedor.nombre" : "ProveedorA"}).toArray();
-        const provB = await medicamentos.countDocuments({"proveedor.nombre" : "ProveedorB"}).toArray();
-        const provC = await medicamentos.countDocuments({"proveedor.nombre" : "ProveedorC"}).toArray();
 
+        const [ provA, provB, provC ] = await Promise.all([
+            medicamentos.countDocuments({"proveedor.nombre" : "ProveedorA"}),
+            medicamentos.countDocuments({"proveedor.nombre" : "ProveedorB"}),
+            medicamentos.countDocuments({"proveedor.nombre" : "ProveedorC"})
+        ]);
         res.status(200).json({
             ProveedorA: {
                 count: provA
