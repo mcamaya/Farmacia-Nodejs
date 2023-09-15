@@ -109,3 +109,87 @@ export const lessSold2023 = async (req, res) => {
         console.log(err);
     }
 }
+
+export const promedioVentas = async (req, res) => {
+    try {
+        const allQuantities = await ventas.aggregate([
+            { $unwind: "$medicamentosVendidos" },
+            {$project: 
+                {_id: "$medicamentosVendidos.nombreMedicamento",
+                avgQuantity : {  $avg : "$medicamentosVendidos.cantidadVendida" }}
+            }
+        ]).toArray();
+        const promediosIndividual = await ventas.aggregate([
+            { $unwind: "$medicamentosVendidos" },
+            {$group: 
+                {_id: "$medicamentosVendidos.nombreMedicamento",
+                avgQuantity : {  $avg : "$medicamentosVendidos.cantidadVendida" }}
+            },
+            {$sort: {avgQuantity: -1}}
+        ]).toArray();
+        let contador = 0;
+        allQuantities.forEach((e) => contador += e.avgQuantity);
+        const promedioTotal = (contador / allQuantities.length);
+        res.status(200).json({promedioMedicamentosXVenta: promedioTotal, promediosIndividual}); 
+    } catch (err) {
+        res.status(500).json({error: err.message});
+        console.log(err);
+    }
+}
+
+
+export const salesEmployees = async (req, res) => {
+    try {
+        const empleados = await ventas.distinct("empleado.nombre");
+        const data = await Promise.all (empleados.map(async emp => {
+            let i = await ventas.aggregate([
+                {$match: 
+                    {"empleado.nombre": emp} // Consultas dinámicas. Por cada empleado va a hacer esta consulta
+                }
+            ]).toArray();
+
+            let obj = {
+                "empleado": emp,
+                "cantidadVentas": i.length,
+                "ventas": i
+            }
+
+            return obj
+        }))
+
+        console.log(empleados);
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+        console.log(err);
+    }
+}
+
+export const MoreThan5Sales = async (req, res) => {
+    try {
+        const data = await ventas.aggregate([
+            {
+              $group: {
+                _id: "$empleado.nombre",
+                totalVentas: { $sum: 1 } //suma 1 por cada venta para contar el total
+              }
+            },
+            {
+              $match: {
+                totalVentas: { $gt: 5 } //filtra empleados con más de 5 ventas
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                totalVentas: 1,
+                empleado: "$_id"
+              }
+            }
+          ]).toArray();
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+        console.log(err);
+    }
+}

@@ -87,7 +87,26 @@
   GET /api/v1/ventas/less_sold_2023
 ```
 
-#### 16. Ganancia total por proveedor en 2023 (asumiendo un campo precioCompra en Compras).
+#### 17. Promedio de medicamentos comprados por venta.
 ```bash
-  GET /api/v1/ventas/less_sold_2023
+  GET /api/v1/ventas/average_sales
 ```
+#### 18. Cantidad de ventas realizadas por cada empleado en 2023.```
+```bash
+  GET /api/v1/ventas/employees_sales
+```
+
+#### 19. Obtener todos los medicamentos que expiren en 2024.```
+```bash
+  GET /api/v1/medicamentos/expires_2024
+```
+
+#### 20. Empleados que hayan hecho más de 5 ventas en total.```
+```bash
+  GET /api/v1/medicamentos/more_than_5_sales
+``` 
+
+#### 21. Medicamentos que no han sido vendidos nunca.
+```bash
+  GET /api/v1/medicamentos/more_than_5_sales
+``` 

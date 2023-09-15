@@ -9,5 +9,8 @@ router.get('/total_sales', controller.totalVentas);
 router.get('/bought_paracetamol', controller.compraronParacetamol);
 router.get('/sales_2023', controller.sales2023);
 router.get('/less_sold_2023', controller.lessSold2023);
+router.get('/average_sales', controller.promedioVentas);
+router.get('/employees_sales', controller.salesEmployees);
+router.get('/more_than_5_sales', controller.MoreThan5Sales);
 
 export default router;

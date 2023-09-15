@@ -11,13 +11,8 @@ export const gananciaProveedores = async (req, res) => {
                     fechaVenta: {$gt: date2022},
                     fechaVenta: {$lt: date2024}
                 }
-            },
-            {
-                $project: {
-                    
-                }
             }
-        ])
+        ]).toArray();
     } catch (err) {
         res.status(500).json({error: err.message});
         console.log(err);
